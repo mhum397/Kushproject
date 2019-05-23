@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import pickle
 from sklearn.preprocessing import LabelEncoder
+from nltk.tokenize import word_tokenize
+from nltk.stem.wordnet import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 app = Flask(__name__)
 
@@ -17,13 +20,16 @@ def predict():
     args = request.args.to_dict()
     # create a variable for each parameter in our API request
     eff1 = str(args['e1'])
-    eff2 = str(args['e2'])
-    eff3 = str(args['e3'])
-    eff4 = str(args['e4'])
-    eff5 = str(args['e5'])
 
+    eff1 = word_tokenize(eff1)
     # setup or X variable as a list of all the API values from above
-    X = np.asarray([eff1, eff2, eff3, eff4, eff5])
+    X = np.asarray([eff1])    
+
+    vex_filename = ('./model/type_vertorizer')
+
+    vectorizer = pickle.load(open(vex_filename, 'rb'))
+
+    vectorizer.transform(X)
 
     # load model that we created
     filename = ('./model/type_model')
